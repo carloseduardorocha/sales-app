@@ -78,25 +78,25 @@ const onFormSubmit = (e) => {
 </script>
 
 <style>
-    .main {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 88vh;
-        gap: 4rem;
-    }
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 88vh;
+    gap: 4rem;
+}
 
-    .p-card-title {
-        text-align: center;
-        font-weight: 900 !important;
-        font-size: 30px !important;
-    }
+.p-card-title {
+    text-align: center;
+    font-weight: 900 !important;
+    font-size: 30px !important;
+}
 
-    .card-content {
-        width: 700px;
-    }
+.card-content {
+    width: 700px;
+}
 
-    .logo-content {
-        -webkit-text-stroke: 0.3px #002c6a;
-    }
+.logo-content {
+    -webkit-text-stroke: 0.3px #002c6a;
+}
 </style>
