@@ -2,7 +2,7 @@ import axios from 'axios';
 import { authService } from '@/services/authService';
 import router from '@/router';
 
-axios.defaults.baseURL = 'http://localhost:90/v1';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
 
 axios.interceptors.request.use(
   config => {

@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:90/v1';
-
+const API_URL   = import.meta.env.VITE_API_URL;
 const TOKEN_KEY = 'sales_token';
 const USER_KEY  = 'sales_user';
 
