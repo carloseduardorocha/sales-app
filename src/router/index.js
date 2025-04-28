@@ -10,6 +10,18 @@ const router = createRouter({
       component: () => import('../views/Login.vue'),
     },
     {
+      path: '/sellers',
+      name: 'sellers',
+      component: () => import('../views/Sellers.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/sales',
+      name: 'sales',
+      component: () => import('../views/Sales.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/logout',
       name: 'logout',
       beforeEnter: async (to, from, next) => {
