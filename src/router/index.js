@@ -28,6 +28,10 @@ const router = createRouter({
         await authService.logout();
         next({ name: 'login' });
       }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      redirect: { name: 'login' }
     }
   ],
 })
