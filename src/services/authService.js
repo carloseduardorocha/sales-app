@@ -1,8 +1,11 @@
-import axios from 'axios';
+import axios from '@/plugins/axios';
+import mitt from 'mitt';
 
 const API_URL   = import.meta.env.VITE_API_URL;
 const TOKEN_KEY = 'sales_token';
 const USER_KEY  = 'sales_user';
+
+const emitter = mitt();
 
 export const authService = {
   async login(email, password) {
@@ -15,7 +18,9 @@ export const authService = {
         
         localStorage.setItem(TOKEN_KEY, token);
         localStorage.setItem(USER_KEY, JSON.stringify(user));
-        
+
+        emitter.emit('auth-change', true);
+
         return { success: true };
       } else {
         return { success: false, message: response.data.message };
@@ -32,11 +37,12 @@ export const authService = {
           Authorization: `Bearer ${this.getToken()}`
         }
       });
-    } catch (error) 
-    {
+    } catch (error) {
     } finally {
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
+
+      emitter.emit('auth-change', false);
     }
   },
 
@@ -56,5 +62,15 @@ export const authService = {
   clearSession() {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
+
+    emitter.emit('auth-change', false);
+  },
+
+  onAuthChange(callback) {
+    emitter.on('auth-change', callback);
+  },
+
+  offAuthChange(callback) {
+    emitter.off('auth-change', callback);
   }
 };
