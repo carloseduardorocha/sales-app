@@ -108,14 +108,13 @@ const onFormSubmit = async (e) => {
     gap: 4rem;
 }
 
-.p-card-title {
-    text-align: center;
-    font-weight: 900 !important;
-    font-size: 30px !important;
-}
-
 .card-content {
     width: 700px;
+    text-align: center;
+    p {
+        font-weight: 500 !important;
+        font-size: 30px !important;
+    }
 }
 
 .logo-content {
