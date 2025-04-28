@@ -27,7 +27,7 @@
                                     </ul>
                                 </Message>
                             </div>
-                            <Button type="submit" severity="secondary" label="Submit" />
+                            <Button type="submit" severity="secondary" label="Submit" :loading="isSubmitting" />
                         </div>
                     </Form>
                 </div>
@@ -38,13 +38,16 @@
 
 <script setup>
 import Card from 'primevue/card';
-import { ref, computed, onMounted } from 'vue';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { zodResolver } from '@primevue/forms/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from 'primevue/usetoast';
 import Image from 'primevue/image';
 import { useLogo } from '@/composables/useLogo';
+import { authService } from '@/services/authService';
 
+const router = useRouter();
 const toast = useToast();
 const { logo } = useLogo();
 
@@ -52,6 +55,8 @@ const initialValues = ref({
     email: '',
     password: ''
 });
+
+const isSubmitting = ref(false);
 
 const resolver = zodResolver(
     z.object({
@@ -65,19 +70,36 @@ const resolver = zodResolver(
             .max(20, { message: 'Maximum 20 characters.' })
             .refine((value) => /[a-z]/.test(value), { message: 'Must have a lowercase letter.' })
             .refine((value) => /[A-Z]/.test(value), { message: 'Must have an uppercase letter.' })
-            .refine((value) => /d/.test(value), { message: 'Must have a number.' })
+            .refine((value) => /\d/.test(value), { message: 'Must have a number.' })
             .refine((value) => /[!@#$%^&*(),.?":{}|<>]/.test(value), { message: 'Must have a special character.' })
     })
 );
 
-const onFormSubmit = (e) => {
+const onFormSubmit = async (e) => {
     if (e.valid) {
-        toast.add({ severity: 'success', summary: 'Form is submitted.', life: 3000 });
+        isSubmitting.value = true;
+        try {
+            const { email, password } = e.values;
+
+            const response = await authService.login(email, password);
+
+            if (response.success) {
+                toast.add({ severity: 'success', summary: 'Login successful!', life: 2000 });
+                router.push('/sellers');
+            } else {
+                console.log(response);
+                toast.add({ severity: 'error', summary: 'Login failed', detail: response.message, life: 3000 });
+            }
+        } catch (error) {
+            toast.add({ severity: 'error', summary: 'Error', detail: 'Unexpected error during login.', life: 3000 });
+        } finally {
+            isSubmitting.value = false;
+        }
     }
 };
 </script>
 
-<style>
+<style scoped>
 .main {
     display: flex;
     justify-content: center;
