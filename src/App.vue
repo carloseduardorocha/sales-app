@@ -1,11 +1,26 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import Menubar from 'primevue/menubar';
 import { useLogo } from '@/composables/useLogo';
+import { authService } from '@/services/authService';
 
 const router = useRouter();
 const { logo } = useLogo();
+
+const isAuthenticated = ref(authService.isAuthenticated());
+
+const handleAuthChange = (status) => {
+    isAuthenticated.value = status;
+};
+
+onMounted(() => {
+    authService.onAuthChange(handleAuthChange);
+});
+
+onUnmounted(() => {
+    authService.offAuthChange(handleAuthChange);
+});
 
 const items = ref([
     {
@@ -27,7 +42,7 @@ const items = ref([
 </script>
 
 <template>
-    <div class="menubar-container">
+    <div v-if="isAuthenticated" class="menubar-container">
         <img class="logo" :src="logo" alt="Logo" width="80" />
         <Menubar :model="items" class="menubar">
             <template #item="{ item, props, hasSubmenu }">
